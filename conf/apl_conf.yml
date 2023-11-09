@@ -1,0 +1,23 @@
+################
+### View config
+FIELD_WIDTH: 256
+FIELD_HEIGHT: 240
+BLK: 16
+CENTER: 8
+CHAR_W: 14
+CHAR_Y: 14
+
+################
+### Game base config
+RTms_Psec: 1000
+FPS: 60
+ServerReqFPS: 30
+# speed is px / 1000ms
+move_speed: 75
+fall_speed: 160
+jump_speed: 160
+jump_power: 5
+
+################
+### Game System param
+CMD_HIS: 5
