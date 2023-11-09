@@ -1,0 +1,19 @@
+{
+  "name": "block-rpg",
+  "version": "1.0.0",
+  "description": "Block!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gilgame-tencho/block-rpg.git"
+  },
+  "author": "",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/gilgame-tencho/block-rpg/issues"
+  },
+  "homepage": "https://github.com/gilgame-tencho/block-rpg#readme"
+}
