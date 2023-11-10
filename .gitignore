@@ -131,3 +131,6 @@ dist
 
 # package-lock
 package-lock.json
+
+# auto build src
+static/common/*.js
