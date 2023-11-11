@@ -130,7 +130,8 @@ const draw_view = function(){
 
     Object.values(pieces).forEach((piece) => {
         let param = {
-            x: piece.x - VIEW_X,
+            // x: piece.x - VIEW_X,
+            x: piece.x,
             y: piece.y,
             width: piece.width,
             height: piece.height,
@@ -142,7 +143,7 @@ const draw_view = function(){
     Object.values(ccdm.players).forEach((player) => {
         let img = images.player[player.type];
         let param = {
-            x: player.x - VIEW_X,
+            x: player.x,
             y: player.y,
             width: player.width,
             height: player.height,
