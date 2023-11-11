@@ -101,9 +101,9 @@ const menu_frame = () => {
 
     const mymenu = my_player.menu;
     cotxFT.save();
-    cotxFT.lineWidth = 3;
+    cotxFT.lineWidth = 30;
     cotxFT.strokeStyle = "#000000";
-    cotxFT.font = "8px Bold 'ＭＳ ゴシック'";
+    cotxFT.font = "italic 60px sans-serif";
     cotxFT.fillText(mymenu.name.v, mymenu.name.x, mymenu.name.y);
     cotxFT.fillText(`SCORE ${mymenu.score.v}`, mymenu.score.x, mymenu.score.y);
     //cotxFT.fillText(`C x 0${mymenu.coin.v}`, mymenu.coin.x, mymenu.coin.y);
