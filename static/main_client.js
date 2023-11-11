@@ -12,8 +12,7 @@ let timer = 0;
 
 const images = {};
 images.player = {
-    r: $('#img-chara-ball')[0],
-    l: $('#img-chara-ball')[0],
+    normal: $('#img-stick')[0],
 }
 images.map = {
     standard: $('#img-map-standard')[0],
@@ -141,7 +140,7 @@ const draw_view = function(){
         }
     });
     Object.values(ccdm.players).forEach((player) => {
-        let img = images.player[player.direction];
+        let img = images.player[player.type];
         let param = {
             x: player.x - VIEW_X,
             y: player.y,
@@ -208,7 +207,7 @@ socket.on('new-player', function(player) {
     console.log(`call new-player`);
     $("#start-screen").hide();
     if(!my_player){
-        my_player = new Player(player);
+        my_player = new PlayerStick(player);
         ccdm.players[my_player.id] = my_player;
     }else{
         my_player.respone();
