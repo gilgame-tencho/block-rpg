@@ -274,7 +274,7 @@ class Player extends GameObject{
         for(let i=0; i<CONF.CMD_HIS; i++){
             this.cmd_his.push({});
         }
-        this.auto_move = true;
+        this.auto_move = false;
         this.debug_info = {
             collistion: '',
         };
@@ -543,42 +543,16 @@ class Stage extends GeneralObject{
         let blk_exist = false;
         let blk_viewing = false;
         let blk_height = 3;
-        for(let x=0; x<CONF.MAX_WIDTH*30; x++){
+        // for(let x=0; x<CONF.MAX_WIDTH*3; x++){
+        for(let x=0; x<3; x++){
             st.push([]);
             for(let y=0; y<CONF.MAX_HEIGHT; y++){
-                if(blk_viewing){
-                    st[x].push('b');
-                    blk_height--;
-                }else if(y == blk_y){
-                    if(x % CONF.MAX_WIDTH == 0){
-                        st[x].push('n');
-                        blk_viewing = true;
-                        blk_height--;
-                        blk_exist = true;
-                    }else if(random(3) == 1){
-                        st[x].push('.');
-                    }else if(random(5) == 1){
-                        st[x].push('i');
-                        blk_exist = true;
-                    }else{
-                        st[x].push('b');
-                        blk_viewing = true;
-                        blk_height--;
-                        blk_exist = true;
-                    }
+                if(y == CONF.MAX_HEIGHT -2){
+                    st[x].push('n');
                 }else{
                     st[x].push('.');
                 }
-                if(blk_viewing && blk_height < 1){
-                    blk_viewing = false;
-                }
             }
-            if(blk_exist){
-                blk_y = this.rand_step(blk_y);
-                blk_exist = false;
-                blk_height = random(5)+1;
-            }
-            blk_viewing = false;
         }
         return st;
     }
@@ -623,55 +597,11 @@ class commonBlock extends PhysicsObject{
         });
     }
 }
-class hardBlock extends commonBlock{
-    constructor(obj={}){
-        super(obj);
-        // this.type = "hard";
-        this.type = "hard";
-        this.height = CONF.BLK * 1;
-    }
-}
-class ichigoBlock extends commonBlock{
-    constructor(obj={}){
-        super(obj);
-        // this.type = "hard";
-        this.type = "ichigo";
-        this.height = CONF.BLK * 2;
-        this.width = CONF.BLK * 2;
-    }
-}
 class normalBlock extends commonBlock{
     constructor(obj={}){
         super(obj);
         this.type = "normal";
-        this.bounding = true;
-    }
-}
-class hatenaBlock extends commonBlock{
-    constructor(obj={}){
-        super(obj);
-        this.type = "hatena";
-        this.bounding = true;
-        this.effect = obj.effenct ? obj.effect : 'coin';
-    }
-}
-class goalBlock extends commonBlock{
-    constructor(obj={}){
-        super(obj);
-        this.type = "goal";
         this.height = CONF.BLK * 1;
-        this.top = 1;
-        this.flag = 1;
-        this.pole = 9;
-        this.block = 1;
-    }
-    toJSON(){
-        return Object.assign(super.toJSON(), {
-            top: this.top,
-            flag: this.flag,
-            pole: this.pole,
-            block: this.block,
-        });
     }
 }
 
@@ -695,16 +625,8 @@ class GameMaster{
                     x: x * CONF.BLK,
                     y: y * CONF.BLK,
                 };
-                if(point === 'b'){
-                    let block = new hardBlock(param);
-                    ccdm.blocks[block.id] = block;
-                }
                 if(point === 'n'){
                     let block = new normalBlock(param);
-                    ccdm.blocks[block.id] = block;
-                }
-                if(point === 'i'){
-                    let block = new ichigoBlock(param);
                     ccdm.blocks[block.id] = block;
                 }
                 y++;
