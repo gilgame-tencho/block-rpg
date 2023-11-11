@@ -400,7 +400,7 @@ class Player extends GameObject{
 
         if(dead_flg){
             this.dead_flg = true;
-            // this.respone();
+            this.respone();
         }
     }
     fall(distance){
@@ -524,6 +524,76 @@ class Enemy extends Player{
     }
 }
 
+class Ball extends GameObject{
+    constructor(obj={}){
+        super(obj);
+        this.speed = 1;
+        this.dead_flg = false;
+        if(obj.id){ this.id = obj.id }
+
+        this.width = CONF.CHAR_W;
+        this.height = CONF.CHAR_Y;
+        this.angle = 0;
+        this.direction = 'r';  // direction is right:r, left:l;
+
+        this.auto_move = false;
+        this.debug_info = {
+            collistion: '',
+        };
+    }
+}
+
+class Stick extends GameObject{
+    constructor(obj={}){
+        super(obj);
+        this.socketId = obj.socketId;
+        this.nickname = obj.nickname;
+        // this.player_type = 'player';
+        this.view_x = 0;
+        this.speed = 1;
+        this.dead_flg = false;
+        if(obj.id){ this.id = obj.id }
+
+        this.menu = {
+            name:       { x: CONF.BLK*1, y: CONF.BLK*1, v:this.nickname },
+            score:      { x: CONF.BLK*1, y: CONF.BLK*2, v:0 },
+
+            coin:       { x: CONF.BLK*5, y: CONF.BLK*2, v:0 },
+            stage_name: { x: CONF.BLK*9, y: CONF.BLK*1, v:"WORLD" },
+            stage_no:   { x: CONF.BLK*9, y: CONF.BLK*2, v:"1-1" },
+            time_title: { x: CONF.BLK*13, y: CONF.BLK*1, v:"TIME" },
+            time:       { x: CONF.BLK*13, y: CONF.BLK*2, v:300 },
+        }
+        this.score_interval = CONF.FPS;
+        this.score_i = 0;
+
+        this.movement = {};
+
+        this.width = CONF.STICK_W;
+        this.height = CONF.STICK_Y;
+        this.angle = 0;
+        this.direction = 'r';  // direction is right:r, left:l;
+        this.cmd_unit = {
+            // jump: {
+            //     type: 'single',
+            //     in_action: false,
+            //     e: 0,
+            //     max_e: CONF.jump_power * CONF.BLK,
+            //     cooltime: 0,
+            // }
+        };
+
+        // this.flg_fly = true;
+        this.cmd_his = []; //command history. FIFO.
+        for(let i=0; i<CONF.CMD_HIS; i++){
+            this.cmd_his.push({});
+        }
+        this.auto_move = false;
+        this.debug_info = {
+            collistion: '',
+        };
+    }
+}
 
 class Stage extends GeneralObject{
     constructor(obj={}){
@@ -543,12 +613,15 @@ class Stage extends GeneralObject{
         let blk_exist = false;
         let blk_viewing = false;
         let blk_height = 3;
-        // for(let x=0; x<CONF.MAX_WIDTH*3; x++){
-        for(let x=0; x<3; x++){
+        for(let x=0; x<CONF.MAX_WIDTH*1.5; x++){
             st.push([]);
             for(let y=0; y<CONF.MAX_HEIGHT; y++){
-                if(y == CONF.MAX_HEIGHT -2){
-                    st[x].push('n');
+                if(y == CONF.MAX_HEIGHT-7){
+                    if(x % 3 == 0){
+                        st[x].push('n');
+                    }else{
+                        st[x].push('.');
+                    }
                 }else{
                     st[x].push('.');
                 }

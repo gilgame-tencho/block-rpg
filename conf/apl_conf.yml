@@ -6,6 +6,9 @@ BLK: 16
 CENTER: 8
 CHAR_W: 14
 CHAR_Y: 14
+STICK_W: 60
+STICK_Y: 14
+
 
 ################
 ### Game base config

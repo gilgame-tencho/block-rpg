@@ -21,6 +21,12 @@ images.map = {
 images.piece = {
     normal: $('#img-block-hard')[0],
 }
+images.ball ={
+    normal: $('#img-chara-ball')[0],
+}
+images.stick = {
+    normal: $('#img-stick')[0],
+}
 
 let my_player;
 let movement = {};
