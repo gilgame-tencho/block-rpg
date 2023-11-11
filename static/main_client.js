@@ -12,16 +12,20 @@ let timer = 0;
 
 const images = {};
 images.player = {
-    r: $('#img-chara-wizard_r')[0],
-    l: $('#img-chara-wizard_l')[0],
+    r: $('#img-chara-ball')[0],
+    l: $('#img-chara-ball')[0],
 }
 images.map = {
     standard: $('#img-map-standard')[0],
 }
 images.piece = {
-    normal: $('#img-block-normal')[0],
-    hard: $('#img-block-hard')[0],
-    ichigo: $('#img-block-ichigo')[0],
+    normal: $('#img-block-hard')[0],
+}
+images.ball ={
+    normal: $('#img-chara-ball')[0],
+}
+images.stick = {
+    normal: $('#img-stick')[0],
 }
 
 let my_player;
@@ -222,8 +226,8 @@ $(document).on('keydown keyup', (event) => {
     const KeyToCommand = {
         'ArrowUp': 'up',
         'ArrowDown': 'down',
-        // 'ArrowLeft': 'left',
-        // 'ArrowRight': 'right',
+        'ArrowLeft': 'left',
+        'ArrowRight': 'right',
         ' ': 'jump',
     };
     const command = KeyToCommand[event.key];
