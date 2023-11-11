@@ -31,13 +31,13 @@ io.on('connection', function(socket) {
     let player = null;
     socket.on('game-start', (config) => {
         logger.log(`gameStart`);
-        player = new GM.Player({
+        player = new GM.PlayerStick({
             socketId: socket.id,
             nickname: config.nickname,
             id: config.id,
             END_POINT: ccdm.stage.END_POINT,    //??
-            x: CONF.BLK * 2,
-            y: CONF.FIELD_HEIGHT * 0.2,
+            x: CONF.BLK * 5,
+            y: CONF.FIELD_HEIGHT * 0.8,
         });
         ccdm.players[player.id] = player;
         io.sockets.emit('new-player', player);

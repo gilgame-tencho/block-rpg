@@ -90,6 +90,7 @@ class CCDM extends ClientCommonDataManager{
         this.players = {};
         this.enemys = {};
         this.blocks = {};
+        this.balls = {};
         this.items = {};
         this.stage = new Stage();
         this.goal = null;
@@ -100,6 +101,7 @@ class CCDM extends ClientCommonDataManager{
             players: this.players,
             enemys: this.enemys,
             blocks: this.blocks,
+            balls: this.balls,
             items: this.items,
             stage: this.stage,
             conf: this.conf,
@@ -450,7 +452,7 @@ class Player extends GameObject{
         this.score_i ++;
     }
     remove(){
-        delete players[this.id];
+        delete ccdm.players[this.id];
         io.to(this.socketId).emit('dead');
     }
     respone(){
@@ -527,6 +529,7 @@ class Enemy extends Player{
 class Ball extends GameObject{
     constructor(obj={}){
         super(obj);
+        this.type = 'normal';
         this.speed = 1;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
@@ -536,18 +539,62 @@ class Ball extends GameObject{
         this.angle = 0;
         this.direction = 'r';  // direction is right:r, left:l;
 
-        this.auto_move = false;
+        this.auto_move = true;
         this.debug_info = {
             collistion: '',
         };
     }
+    frame(){
+        if(this.auto_move){
+            this.angle = Math.PI * 0;
+            this.direction = 'r';
+            this.move(CONF.MV_SPEED);
+        }
+        this.isDead();
+    }
+    intersectBlock(oldX, oldY){
+        return Object.keys(ccdm.blocks).some((id)=>{
+            if(this.intersect(ccdm.blocks[id])){
+                if(oldY > this.y){
+                    ccdm.blocks[id].touched = this.id;
+                }
+                return true;
+            }
+        });
+    }
+    isDead(){
+        let dead_flg = false;
+        if(this.y > CONF.DEAD_LINE){
+            dead_flg = true;
+        }
+
+        if(dead_flg){
+            this.dead_flg = true;
+            this.respone();
+        }
+    }
+    remove(){
+        delete cdm.balls[this.id];
+        io.to(this.socketId).emit('dead');
+    }
+    toJSON(){
+        return Object.assign(super.toJSON(), {
+            socketId: this.socketId,
+            nickname: this.nickname,
+            type: this.type,
+            view_x: this.view_x,
+            menu: this.menu,
+            dead_flg: this.dead_flg,
+        });
+    }
 }
 
-class Stick extends GameObject{
+class PlayerStick extends GameObject{
     constructor(obj={}){
         super(obj);
         this.socketId = obj.socketId;
         this.nickname = obj.nickname;
+        this.type = 'normal';
         // this.player_type = 'player';
         this.view_x = 0;
         this.speed = 1;
@@ -592,6 +639,126 @@ class Stick extends GameObject{
         this.debug_info = {
             collistion: '',
         };
+    }
+    command(param){
+        this.movement = param;
+    }
+    frame(){
+        this.score_cal();
+        let command = this.movement;
+        // movement
+        if(command.forward){
+            this.move(CONF.MV_SPEED);
+        }
+        if(command.back){
+            this.move(-CONF.MV_SPEED);
+        }
+        if(command.left){
+            this.angle = Math.PI * 1;
+            this.direction = 'l';
+            this.move(CONF.MV_SPEED);
+        }
+        if(command.right){
+            this.angle = Math.PI * 0;
+            this.direction = 'r';
+            this.move(CONF.MV_SPEED);
+        }
+        if(command.up){
+        }
+        if(command.down){
+        }
+
+        // command reflesh.
+        this.cmd_his.push(command);
+        if(this.cmd_his.length > CONF.CMD_HIS){
+            this.cmd_his.shift();
+        }
+
+        if(this.auto_move){
+            this.angle = Math.PI * 0;
+            this.direction = 'r';
+            this.move(CONF.MV_SPEED);
+        }
+        this.isDead();
+    }
+    collistion(oldX, oldY, oldViewX=this.view_x){
+        let collision = false;
+        if(this.intersectField()){
+                collision = true;
+                this.debug_info.collistion = 'intersectField';
+        }
+        if(this.intersectBlock(oldX, oldY)){
+            collision = true;
+            this.debug_info.collistion = 'intersectBlock';
+        }
+        if(collision){
+            this.x = oldX; this.y = oldY;
+            this.view_x = oldViewX;
+        }else{
+            this.debug_info.collistion = '';
+        }
+        return collision;
+    }
+    move(distance){
+        const oldX = this.x, oldY = this.y;
+        const oldViewX = this.view_x;
+
+        let range = distance * this.speed;
+        let dis_x = range * Math.cos(this.angle);
+        let dis_y = range * Math.sin(this.angle);
+        if(this.x + dis_x <= this.view_x + CONF.CENTER){
+            this.x += dis_x;
+            this.y += dis_y;
+        }else{
+            this.view_x += dis_x;
+            this.x += dis_x;
+            this.y += dis_y;
+        }
+
+        let collision = this.collistion(oldX, oldY, oldViewX);
+
+        if(!collision){
+            Object.keys(ccdm.items).forEach((id)=>{
+                if(ccdm.items[id] && this.intersect(ccdm.items[id])){
+                    ccdm.items[id].touched = this.id;
+                    this.menu.coin.v++;
+                    delete ccdm.items[id];
+                }
+            });
+        }
+        return !collision;
+    }
+    isDead(){
+        let dead_flg = false;
+        if(this.y > CONF.DEAD_LINE){
+            dead_flg = true;
+        }
+
+        if(dead_flg){
+            this.dead_flg = true;
+            this.respone();
+        }
+    }
+    score_cal(){
+        if(this.score_i > this.score_interval){
+            this.menu.score.v += Math.round(CONF.MV_SPEED * this.score_interval,0);
+            this.score_i = 0;
+        }
+        this.score_i ++;
+    }
+    remove(){
+        delete ccdm.players[this.id];
+        io.to(this.socketId).emit('dead');
+    }
+    toJSON(){
+        return Object.assign(super.toJSON(), {
+            socketId: this.socketId,
+            nickname: this.nickname,
+            type: this.type,
+            view_x: this.view_x,
+            menu: this.menu,
+            dead_flg: this.dead_flg,
+        });
     }
 }
 
@@ -718,6 +885,8 @@ const gameMtr = new GameMaster();
 module.exports = {
     GM: GameObject,
     Player: Player,
+    PlayerStick: PlayerStick,
+    Ball: Ball,
     CONF: CONF,
     ccdm: ccdm,
     gameMtr: gameMtr,
