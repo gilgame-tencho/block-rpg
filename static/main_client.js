@@ -160,6 +160,18 @@ const draw_view = function(){
             }
         }
     });
+    Object.values(ccdm.balls).forEach((ball) => {
+        let img = images.ball[ball.type];
+        let param = {
+            x: ball.x,
+            y: ball.y,
+            width: ball.width,
+            height: ball.height,
+        }
+        if(is_draw(param, MARGIN, CONF.FIELD_WIDTH)){
+            drawImage(cotxMD, img, param);
+        }
+    });
 }
 
 let front_view_x = CONF.FIELD_WIDTH;
@@ -174,8 +186,9 @@ const main_frame = () => {
             front_view_x = player.view_x + CONF.FIELD_WIDTH;
         }
     });
-    // console.log(`debug: my_player[ view_x, x, y ]: [${my_player.view_x}\t${my_player.x}\t${my_player.y}]`);
-    // console.log(`debug: front_view_x: ${front_view_x}`);
+    Object.values(ccdm.balls).forEach((ball) => {
+        ball.frame();
+    });
 }
 
 let start_flg = false;
@@ -210,6 +223,7 @@ socket.on('new-player', function(player) {
     if(!my_player){
         my_player = new PlayerStick(player);
         ccdm.players[my_player.id] = my_player;
+        my_player.shoot();
     }else{
         my_player.respone();
     }

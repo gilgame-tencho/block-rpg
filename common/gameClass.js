@@ -550,14 +550,13 @@ class Ball extends GameObject{
             this.direction = 'r';
             this.move(CONF.MV_SPEED);
         }
+        this.fall(CONF.FALL_SPEED);
         this.isDead();
     }
-    intersectBlock(oldX, oldY){
-        return Object.keys(ccdm.blocks).some((id)=>{
-            if(this.intersect(ccdm.blocks[id])){
-                if(oldY > this.y){
-                    ccdm.blocks[id].touched = this.id;
-                }
+    intersectBlock(){
+        let blk = Object.assign({}, ccdm.blocks, ccdm.players);
+        return Object.keys(blk).some((id)=>{
+            if(this.intersect(blk[id])){
                 return true;
             }
         });
@@ -566,11 +565,6 @@ class Ball extends GameObject{
         let dead_flg = false;
         if(this.y > CONF.DEAD_LINE){
             dead_flg = true;
-        }
-
-        if(dead_flg){
-            this.dead_flg = true;
-            this.respone();
         }
     }
     remove(){
@@ -620,6 +614,10 @@ class PlayerStick extends GameObject{
         this.height = CONF.STICK_Y;
         this.angle = 0;
         this.direction = 'r';  // direction is right:r, left:l;
+
+        this.balls = {};
+        // this.shoot();
+
         this.cmd_unit = {
             // jump: {
             //     type: 'single',
@@ -680,6 +678,15 @@ class PlayerStick extends GameObject{
             this.move(CONF.MV_SPEED);
         }
         this.isDead();
+    }
+    shoot(){
+        let param = {
+            x: CONF.BLK * 3,
+            y: CONF.BLK * 4,
+        }
+        let ball = new Ball(param);
+        this.balls[ball.id] = ball;
+        ccdm.balls[ball.id] = ball;
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
