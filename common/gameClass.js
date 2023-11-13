@@ -537,6 +537,9 @@ class Ball extends GameObject{
         this.width = CONF.CHAR_W;
         this.height = CONF.CHAR_Y;
         this.angle = 0;
+        this.direction_LR = true;
+        this.direction_UD = true;
+
         this.direction = 'r';  // direction is right:r, left:l;
 
         this.auto_move = true;
@@ -546,31 +549,68 @@ class Ball extends GameObject{
     }
     frame(){
         if(this.auto_move){
-            this.angle = Math.PI * 0;
-            this.direction = 'r';
+            if(this.direction_LR){
+                this.angle = Math.PI * 0;
+                this.direction = 'r';
+            }else{
+                this.angle = Math.PI * 1;
+                this.direction = 'l';
+            }
             this.move(CONF.MV_SPEED);
+        }
+        if(this.direction_UD){
+            this.fall(CONF.FALL_SPEED);
+        }else{
+            this.rise(CONF.FALL_SPEED);
         }
         this.isDead();
     }
-    intersectBlock(oldX, oldY){
-        return Object.keys(ccdm.blocks).some((id)=>{
-            if(this.intersect(ccdm.blocks[id])){
-                if(oldY > this.y){
-                    ccdm.blocks[id].touched = this.id;
+    collistion(oldX, oldY){
+        let collision = false;
+        if(this.intersectField()){
+                collision = true;
+        }
+        if(this.intersectBlock()){
+            collision = true;
+        }
+        if(collision){
+            this.x = oldX; this.y = oldY;
+        }
+        return collision;
+    }
+    intersectBlock(){
+        let blk = Object.assign({}, ccdm.blocks, ccdm.players);
+        return Object.keys(blk).some((id)=>{
+            if(this.intersect(blk[id])){
+                if(blk[id].constructor.name === 'PlayerStick'){
+                    this.direction_UD = !this.direction_UD;
                 }
                 return true;
             }
         });
     }
+    intersectField(){
+        if(this.x < 0){
+            this.direction_LR = true;
+        }
+        if(this.y < 0){
+            this.direction_UD = true;
+        }
+        if(this.x + this.width >= this.MAX_WIDTH){
+            this.direction_LR = false;
+        }
+
+        return (
+            this.x < 0 ||
+            this.x + this.width >= this.END_POINT ||
+            this.y < 0 ||
+            this.y + this.height >= CONF.DEAD_END
+        )
+    }
     isDead(){
         let dead_flg = false;
         if(this.y > CONF.DEAD_LINE){
             dead_flg = true;
-        }
-
-        if(dead_flg){
-            this.dead_flg = true;
-            this.respone();
         }
     }
     remove(){
@@ -620,6 +660,10 @@ class PlayerStick extends GameObject{
         this.height = CONF.STICK_Y;
         this.angle = 0;
         this.direction = 'r';  // direction is right:r, left:l;
+
+        this.balls = {};
+        // this.shoot();
+
         this.cmd_unit = {
             // jump: {
             //     type: 'single',
@@ -680,6 +724,15 @@ class PlayerStick extends GameObject{
             this.move(CONF.MV_SPEED);
         }
         this.isDead();
+    }
+    shoot(){
+        let param = {
+            x: CONF.BLK * 3,
+            y: CONF.BLK * 4,
+        }
+        let ball = new Ball(param);
+        this.balls[ball.id] = ball;
+        ccdm.balls[ball.id] = ball;
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
@@ -780,7 +833,7 @@ class Stage extends GeneralObject{
         let blk_exist = false;
         let blk_viewing = false;
         let blk_height = 3;
-        for(let x=0; x<CONF.MAX_WIDTH*1.5; x++){
+        for(let x=0; x<CONF.MAX_WIDTH; x++){
             st.push([]);
             for(let y=0; y<CONF.MAX_HEIGHT; y++){
                 if(y == CONF.MAX_HEIGHT-7){
