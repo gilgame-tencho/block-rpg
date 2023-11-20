@@ -537,6 +537,12 @@ class Ball extends GameObject{
         this.width = CONF.CHAR_W;
         this.height = CONF.CHAR_Y;
         this.angle = 0;
+        this.touch = {
+            upper: false,
+            under: false,
+            left: false,
+            right: false,
+        }
         this.direction_LR = true;
         this.direction_UD = true;
 
