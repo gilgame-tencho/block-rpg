@@ -650,17 +650,6 @@ class Ball extends GameObject{
             }
         }
     }
-    intersectBlock(){
-        let blk = Object.assign({}, ccdm.blocks, ccdm.players);
-        return Object.keys(blk).some((id)=>{
-            if(this.intersect(blk[id])){
-                if(blk[id].constructor.name === 'PlayerStick'){
-                    this.direction_UD = !this.direction_UD;
-                }
-                return true;
-            }
-        });
-    }
     intersectField(){
         if(this.x < 0){
             this.touched.left = true;
