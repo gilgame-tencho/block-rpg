@@ -602,9 +602,9 @@ class Ball extends GameObject{
         let blk = Object.assign({}, ccdm.blocks, ccdm.players);
         return Object.keys(blk).some((id)=>{
             if(this.intersect(blk[id])){
-                if(blk[id].constructor.name === 'PlayerStick'){
-                    this.direction_UD = !this.direction_UD;
-                }
+                // if(blk[id].constructor.name === 'PlayerStick'){
+                //     // this.direction_UD = !this.direction_UD;
+                // }
                 return true;
             }
         });
@@ -671,15 +671,12 @@ class Ball extends GameObject{
     intersectField(){
         if(this.x < 0){
             this.touched.left = true;
-            this.direction_LR = true;
         }
         if(this.y < 0){
             this.touched.upper = true;
-            this.direction_UD = true;
         }
-        if(this.x + this.width >= this.MAX_WIDTH){
+        if(this.x + this.width >= this.END_POINT){
             this.touched.right = true;
-            this.direction_LR = false;
         }
         if(this.y + this.height >= this.MAX_HEIGHT){
             // drop.
