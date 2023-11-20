@@ -805,8 +805,8 @@ class PlayerStick extends GameObject{
     }
     shoot(){
         let param = {
-            x: CONF.BLK * 3,
-            y: CONF.BLK * 4,
+            x: this.x + this.width / 2,
+            y: this.y - CONF.CHAR_Y,
         }
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
