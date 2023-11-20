@@ -32,10 +32,10 @@ Debug_Slow: 0
 FPS: 60
 ServerReqFPS: 30
 # speed is px / 1000ms
-move_speed: 750
-fall_speed: 1600
-jump_speed: 1600
-ball_speed: 1000
+move_speed: 1200
+fall_speed: 600
+jump_speed: 600
+ball_speed: 800
 jump_power: 5
 
 ################

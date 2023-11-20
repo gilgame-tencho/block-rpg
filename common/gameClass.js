@@ -239,7 +239,7 @@ class Player extends GameObject{
         this.nickname = obj.nickname;
         this.player_type = 'player';
         this.view_x = 0;
-        this.speed = 1;
+        this.speed = CONF.MV_SPEED;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
 
@@ -291,20 +291,20 @@ class Player extends GameObject{
         // console.log(this.cmd_his);
         // movement
         if(command.forward){
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(command.back){
-            this.move(-CONF.MV_SPEED);
+            this.move(-this.speed);
         }
         if(command.left){
             this.angle = Math.PI * 1;
             this.direction = 'l';
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(command.right){
             this.angle = Math.PI * 0;
             this.direction = 'r';
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(command.up){
         }
