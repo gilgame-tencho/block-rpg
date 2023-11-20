@@ -587,65 +587,68 @@ class Ball extends GameObject{
     intersect(obj){
         let collision = super.intersect(obj);
         if(collision){
-            let line = {
-                flat: false,
-                updown: false,
-            };
-            let area = {
-                height: 0,
-                width: 0,
-            };
-            if(this.x < obj.x){
-                if(this.x + this.width < obj.x + obj.width){
-                    area.width = this.x + this.width - obj.x;
-                }else{
-                    area.width = obj.width;
-                }
-            }else{
-                if(this.x + this.width < obj.x + obj.width){
-                    area.width = obj.width;
-                }else{
-                    area.width = obj.x + obj.width - this.x;
-                }
-            }
-            if(this.y < obj.y){
-                if(this.y + this.height < obj.y + obj.height){
-                    area.height = this.y + this.height - obj.y;
-                }else{
-                    area.height = obj.height;
-                }
-            }else{
-                if(this.y + this.height < obj.y + obj.height){
-                    area.height = obj.height;
-                }else{
-                    area.height = obj.y + obj.height - this.y;
-                }
-            }
-            if(area.width == area.height){
-                line.flat = true;
-                line.updown = true;
-            }else if(area.width > area.height){
-                line.updown = true;
-            }else{
-                // area.width < area.height
-                line.flat = true;
-            }
-            if(line.flat){
-                if(this.x < obj.x){
-                    this.touched.right = true;
-                }else{
-                    this.touched.left = true;
-                }
-            }
-            if(line.updown){
-                if(this.y < obj.y){
-                    this.touched.under = true;
-                }else{
-                    this.touched.upper = true;
-                }
-            }
+            this.collistionDetectionObj(obj);
         }
         return collision;
+    }
+    collistionDetectionObj(obj){
+        let line = {
+            flat: false,
+            updown: false,
+        };
+        let area = {
+            height: 0,
+            width: 0,
+        };
+        if(this.x < obj.x){
+            if(this.x + this.width < obj.x + obj.width){
+                area.width = this.x + this.width - obj.x;
+            }else{
+                area.width = obj.width;
+            }
+        }else{
+            if(this.x + this.width < obj.x + obj.width){
+                area.width = obj.width;
+            }else{
+                area.width = obj.x + obj.width - this.x;
+            }
+        }
+        if(this.y < obj.y){
+            if(this.y + this.height < obj.y + obj.height){
+                area.height = this.y + this.height - obj.y;
+            }else{
+                area.height = obj.height;
+            }
+        }else{
+            if(this.y + this.height < obj.y + obj.height){
+                area.height = obj.height;
+            }else{
+                area.height = obj.y + obj.height - this.y;
+            }
+        }
+        if(area.width == area.height){
+            line.flat = true;
+            line.updown = true;
+        }else if(area.width > area.height){
+            line.updown = true;
+        }else{
+            // area.width < area.height
+            line.flat = true;
+        }
+        if(line.flat){
+            if(this.x < obj.x){
+                this.touched.right = true;
+            }else{
+                this.touched.left = true;
+            }
+        }
+        if(line.updown){
+            if(this.y < obj.y){
+                this.touched.under = true;
+            }else{
+                this.touched.upper = true;
+            }
+        }
     }
     intersectBlock(){
         let blk = Object.assign({}, ccdm.blocks, ccdm.players);
