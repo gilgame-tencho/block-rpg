@@ -188,6 +188,7 @@ const main_frame = () => {
     });
     Object.values(ccdm.balls).forEach((ball) => {
         ball.frame();
+        console.log(ball.touched);
     });
 }
 

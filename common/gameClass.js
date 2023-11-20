@@ -569,6 +569,26 @@ class Ball extends GameObject{
         }else{
             this.rise(CONF.FALL_SPEED);
         }
+
+        // # After
+        if(this.touched.upper){
+            this.direction_UD = true;
+        }
+        if(this.touched.under){
+            this.direction_UD = false;
+        }
+        if(this.touched.left){
+            this.direction_LR = true;
+        }
+        if(this.touched.right){
+            this.direction_LR = false;
+        }
+        this.touched = {
+            upper: false,
+            under: false,
+            left: false,
+            right: false,
+        }
         this.isDead();
     }
     intersect(obj){
@@ -577,6 +597,17 @@ class Ball extends GameObject{
             this.collistionDetectionObj(obj);
         }
         return collision;
+    }
+    intersectBlock(){
+        let blk = Object.assign({}, ccdm.blocks, ccdm.players);
+        return Object.keys(blk).some((id)=>{
+            if(this.intersect(blk[id])){
+                if(blk[id].constructor.name === 'PlayerStick'){
+                    this.direction_UD = !this.direction_UD;
+                }
+                return true;
+            }
+        });
     }
     collistionDetectionObj(obj){
         let line = {
