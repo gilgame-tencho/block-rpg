@@ -14,6 +14,7 @@ CONF.FPMS = Math.round(CONF.RTms_Psec / CONF.FPS * 100) / 100;
 CONF.MV_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.move_speed;
 CONF.FALL_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.fall_speed;
 CONF.JUMP_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.jump_speed;
+CONF.BALL_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.ball_speed;
 
 // File access is there. ====
 
@@ -238,7 +239,7 @@ class Player extends GameObject{
         this.nickname = obj.nickname;
         this.player_type = 'player';
         this.view_x = 0;
-        this.speed = 1;
+        this.speed = CONF.MV_SPEED;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
 
@@ -290,20 +291,20 @@ class Player extends GameObject{
         // console.log(this.cmd_his);
         // movement
         if(command.forward){
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(command.back){
-            this.move(-CONF.MV_SPEED);
+            this.move(-this.speed);
         }
         if(command.left){
             this.angle = Math.PI * 1;
             this.direction = 'l';
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(command.right){
             this.angle = Math.PI * 0;
             this.direction = 'r';
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(command.up){
         }
@@ -530,7 +531,7 @@ class Ball extends GameObject{
     constructor(obj={}){
         super(obj);
         this.type = 'normal';
-        this.speed = 1;
+        this.speed = CONF.BALL_SPEED;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
 
@@ -562,12 +563,12 @@ class Ball extends GameObject{
                 this.angle = Math.PI * 1;
                 this.direction = 'l';
             }
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(this.direction_UD){
-            this.fall(CONF.FALL_SPEED);
+            this.fall(this.speed);
         }else{
-            this.rise(CONF.FALL_SPEED);
+            this.rise(this.speed);
         }
 
         // # After
@@ -805,8 +806,8 @@ class PlayerStick extends GameObject{
     }
     shoot(){
         let param = {
-            x: CONF.BLK * 3,
-            y: CONF.BLK * 4,
+            x: this.x + this.width / 2,
+            y: this.y - CONF.CHAR_Y,
         }
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
@@ -911,11 +912,12 @@ class Stage extends GeneralObject{
         let blk_exist = false;
         let blk_viewing = false;
         let blk_height = 3;
+        let hool = Math.round(CONF.CHAR_W / CONF.BLK) + 2;
         for(let x=0; x<CONF.MAX_WIDTH; x++){
             st.push([]);
             for(let y=0; y<CONF.MAX_HEIGHT; y++){
-                if(y == CONF.MAX_HEIGHT-7){
-                    if(x % 3 == 0){
+                if(y == 7 || y == 12){
+                    if(x % hool == 0){
                         st[x].push('n');
                     }else{
                         st[x].push('.');
