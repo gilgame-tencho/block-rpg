@@ -911,11 +911,12 @@ class Stage extends GeneralObject{
         let blk_exist = false;
         let blk_viewing = false;
         let blk_height = 3;
+        let hool = Math.round(CONF.CHAR_W / CONF.BLK) + 2;
         for(let x=0; x<CONF.MAX_WIDTH; x++){
             st.push([]);
             for(let y=0; y<CONF.MAX_HEIGHT; y++){
-                if(y == CONF.MAX_HEIGHT-7){
-                    if(x % 3 == 0){
+                if(y == 7 || y == 12){
+                    if(x % hool == 0){
                         st[x].push('n');
                     }else{
                         st[x].push('.');
