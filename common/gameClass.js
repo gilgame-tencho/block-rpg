@@ -537,7 +537,7 @@ class Ball extends GameObject{
         this.width = CONF.CHAR_W;
         this.height = CONF.CHAR_Y;
         this.angle = 0;
-        this.touch = {
+        this.touched = {
             upper: false,
             under: false,
             left: false,
@@ -584,6 +584,55 @@ class Ball extends GameObject{
         }
         return collision;
     }
+    intersect(obj){
+        let collision = super.intersect(obj);
+        if(collision){
+            let line = {
+                flat: false,
+                updown: false,
+            };
+            let area = {
+                height: 0,
+                width: 0,
+            };
+            if(this.x < obj.x){
+                if(this.x + this.width < obj.x + obj.width){
+                    area.width = this.x + this.width - obj.x;
+                }else{
+                    area.width = obj.width;
+                }
+            }else{
+                if(this.x + this.width < obj.x + obj.width){
+                    area.width = obj.width;
+                }else{
+                    area.width = obj.x + obj.width - this.x;
+                }
+            }
+            if(this.y < obj.y){
+                if(this.y + this.height < obj.y + obj.height){
+                    area.height = this.y + this.height - obj.y;
+                }else{
+                    area.height = obj.height;
+                }
+            }else{
+                if(this.y + this.height < obj.y + obj.height){
+                    area.height = obj.height;
+                }else{
+                    area.height = obj.y + obj.height - this.y;
+                }
+            }
+            if(area.width == area.height){
+                line.flat = true;
+                line.updown = true;
+            }else if(area.width > area.height){
+                line.updown = true;
+            }else{
+                // area.width < area.height
+                line.flat = true;
+            }
+        }
+        return collision;
+    }
     intersectBlock(){
         let blk = Object.assign({}, ccdm.blocks, ccdm.players);
         return Object.keys(blk).some((id)=>{
@@ -597,21 +646,23 @@ class Ball extends GameObject{
     }
     intersectField(){
         if(this.x < 0){
+            this.touched.left = true;
             this.direction_LR = true;
         }
         if(this.y < 0){
+            this.touched.upper = true;
             this.direction_UD = true;
         }
         if(this.x + this.width >= this.MAX_WIDTH){
+            this.touched.right = true;
             this.direction_LR = false;
         }
+        if(this.y + this.height >= this.MAX_HEIGHT){
+            // drop.
+            this.touched.under = true;
+        }
 
-        return (
-            this.x < 0 ||
-            this.x + this.width >= this.END_POINT ||
-            this.y < 0 ||
-            this.y + this.height >= CONF.DEAD_END
-        )
+        return super.intersectField();
     }
     isDead(){
         let dead_flg = false;
