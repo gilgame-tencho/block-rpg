@@ -630,6 +630,20 @@ class Ball extends GameObject{
                 // area.width < area.height
                 line.flat = true;
             }
+            if(line.flat){
+                if(this.x < obj.x){
+                    this.touched.right = true;
+                }else{
+                    this.touched.left = true;
+                }
+            }
+            if(line.updown){
+                if(this.y < obj.y){
+                    this.touched.under = true;
+                }else{
+                    this.touched.upper = true;
+                }
+            }
         }
         return collision;
     }
