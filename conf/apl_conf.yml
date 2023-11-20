@@ -35,6 +35,7 @@ ServerReqFPS: 30
 move_speed: 750
 fall_speed: 1600
 jump_speed: 1600
+ball_speed: 1000
 jump_power: 5
 
 ################

@@ -14,6 +14,7 @@ CONF.FPMS = Math.round(CONF.RTms_Psec / CONF.FPS * 100) / 100;
 CONF.MV_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.move_speed;
 CONF.FALL_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.fall_speed;
 CONF.JUMP_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.jump_speed;
+CONF.BALL_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.ball_speed;
 
 // File access is there. ====
 
@@ -530,7 +531,7 @@ class Ball extends GameObject{
     constructor(obj={}){
         super(obj);
         this.type = 'normal';
-        this.speed = 1;
+        this.speed = CONF.BALL_SPEED;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
 
@@ -562,12 +563,12 @@ class Ball extends GameObject{
                 this.angle = Math.PI * 1;
                 this.direction = 'l';
             }
-            this.move(CONF.MV_SPEED);
+            this.move(this.speed);
         }
         if(this.direction_UD){
-            this.fall(CONF.FALL_SPEED);
+            this.fall(this.speed);
         }else{
-            this.rise(CONF.FALL_SPEED);
+            this.rise(this.speed);
         }
 
         // # After
