@@ -571,19 +571,6 @@ class Ball extends GameObject{
         }
         this.isDead();
     }
-    collistion(oldX, oldY){
-        let collision = false;
-        if(this.intersectField()){
-                collision = true;
-        }
-        if(this.intersectBlock()){
-            collision = true;
-        }
-        if(collision){
-            this.x = oldX; this.y = oldY;
-        }
-        return collision;
-    }
     intersect(obj){
         let collision = super.intersect(obj);
         if(collision){
