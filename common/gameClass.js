@@ -11,9 +11,9 @@ CONF.DEAD_END = CONF.FIELD_HEIGHT + CONF.BLK * 3;
 CONF.MAX_HEIGHT = CONF.FIELD_HEIGHT / CONF.BLK - 1;
 CONF.MAX_WIDTH = CONF.FIELD_WIDTH / CONF.BLK;
 CONF.FPMS = Math.round(CONF.RTms_Psec / CONF.FPS * 100) / 100;
-CONF.MV_SPEED = CONF.FPMS / CONF.RTms_Psec * CONF.move_speed;
-CONF.FALL_SPEED = CONF.FPMS / CONF.RTms_Psec * CONF.fall_speed;
-CONF.JUMP_SPEED = CONF.FPMS / CONF.RTms_Psec * CONF.jump_speed;
+CONF.MV_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.move_speed;
+CONF.FALL_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.fall_speed;
+CONF.JUMP_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.jump_speed;
 
 // File access is there. ====
 
@@ -537,6 +537,12 @@ class Ball extends GameObject{
         this.width = CONF.CHAR_W;
         this.height = CONF.CHAR_Y;
         this.angle = 0;
+        this.touched = {
+            upper: false,
+            under: false,
+            left: false,
+            right: false,
+        }
         this.direction_LR = true;
         this.direction_UD = true;
 
@@ -563,18 +569,32 @@ class Ball extends GameObject{
         }else{
             this.rise(CONF.FALL_SPEED);
         }
+
+        // # After
+        if(this.touched.upper){
+            this.direction_UD = true;
+        }
+        if(this.touched.under){
+            this.direction_UD = false;
+        }
+        if(this.touched.left){
+            this.direction_LR = true;
+        }
+        if(this.touched.right){
+            this.direction_LR = false;
+        }
+        this.touched = {
+            upper: false,
+            under: false,
+            left: false,
+            right: false,
+        }
         this.isDead();
     }
-    collistion(oldX, oldY){
-        let collision = false;
-        if(this.intersectField()){
-                collision = true;
-        }
-        if(this.intersectBlock()){
-            collision = true;
-        }
+    intersect(obj){
+        let collision = super.intersect(obj);
         if(collision){
-            this.x = oldX; this.y = oldY;
+            this.collistionDetectionObj(obj);
         }
         return collision;
     }
@@ -582,30 +602,88 @@ class Ball extends GameObject{
         let blk = Object.assign({}, ccdm.blocks, ccdm.players);
         return Object.keys(blk).some((id)=>{
             if(this.intersect(blk[id])){
-                if(blk[id].constructor.name === 'PlayerStick'){
-                    this.direction_UD = !this.direction_UD;
-                }
+                // if(blk[id].constructor.name === 'PlayerStick'){
+                //     // this.direction_UD = !this.direction_UD;
+                // }
                 return true;
             }
         });
     }
+    collistionDetectionObj(obj){
+        let line = {
+            flat: false,
+            updown: false,
+        };
+        let area = {
+            height: 0,
+            width: 0,
+        };
+        if(this.x < obj.x){
+            if(this.x + this.width < obj.x + obj.width){
+                area.width = this.x + this.width - obj.x;
+            }else{
+                area.width = obj.width;
+            }
+        }else{
+            if(this.x + this.width < obj.x + obj.width){
+                area.width = obj.width;
+            }else{
+                area.width = obj.x + obj.width - this.x;
+            }
+        }
+        if(this.y < obj.y){
+            if(this.y + this.height < obj.y + obj.height){
+                area.height = this.y + this.height - obj.y;
+            }else{
+                area.height = obj.height;
+            }
+        }else{
+            if(this.y + this.height < obj.y + obj.height){
+                area.height = obj.height;
+            }else{
+                area.height = obj.y + obj.height - this.y;
+            }
+        }
+        if(area.width == area.height){
+            line.flat = true;
+            line.updown = true;
+        }else if(area.width > area.height){
+            line.updown = true;
+        }else{
+            // area.width < area.height
+            line.flat = true;
+        }
+        if(line.flat){
+            if(this.x < obj.x){
+                this.touched.right = true;
+            }else{
+                this.touched.left = true;
+            }
+        }
+        if(line.updown){
+            if(this.y < obj.y){
+                this.touched.under = true;
+            }else{
+                this.touched.upper = true;
+            }
+        }
+    }
     intersectField(){
         if(this.x < 0){
-            this.direction_LR = true;
+            this.touched.left = true;
         }
         if(this.y < 0){
-            this.direction_UD = true;
+            this.touched.upper = true;
         }
-        if(this.x + this.width >= this.MAX_WIDTH){
-            this.direction_LR = false;
+        if(this.x + this.width >= this.END_POINT){
+            this.touched.right = true;
+        }
+        if(this.y + this.height >= this.MAX_HEIGHT){
+            // drop.
+            this.touched.under = true;
         }
 
-        return (
-            this.x < 0 ||
-            this.x + this.width >= this.END_POINT ||
-            this.y < 0 ||
-            this.y + this.height >= CONF.DEAD_END
-        )
+        return super.intersectField();
     }
     isDead(){
         let dead_flg = false;

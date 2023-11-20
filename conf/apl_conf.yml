@@ -12,7 +12,23 @@ STICK_Y: 140
 
 ################
 ### Game base config
+###   if debug is example:
+###     RTms_Psec: 1000
+###     Debug_Slow: 5000
+###     FPS: 30
+###   defoult
+###     RTms_Psec: 1000
+###     Debug_Slow: 0
+###     FPS: 60
+###     ServerReqFPS: 30
+###     # speed is px / 1000ms
+###     move_speed: 750
+###     fall_speed: 1600
+###     jump_speed: 1600
+###     jump_power: 5
+### ##
 RTms_Psec: 1000
+Debug_Slow: 0
 FPS: 60
 ServerReqFPS: 30
 # speed is px / 1000ms
