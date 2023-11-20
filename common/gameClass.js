@@ -11,9 +11,9 @@ CONF.DEAD_END = CONF.FIELD_HEIGHT + CONF.BLK * 3;
 CONF.MAX_HEIGHT = CONF.FIELD_HEIGHT / CONF.BLK - 1;
 CONF.MAX_WIDTH = CONF.FIELD_WIDTH / CONF.BLK;
 CONF.FPMS = Math.round(CONF.RTms_Psec / CONF.FPS * 100) / 100;
-CONF.MV_SPEED = CONF.FPMS / CONF.RTms_Psec * CONF.move_speed;
-CONF.FALL_SPEED = CONF.FPMS / CONF.RTms_Psec * CONF.fall_speed;
-CONF.JUMP_SPEED = CONF.FPMS / CONF.RTms_Psec * CONF.jump_speed;
+CONF.MV_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.move_speed;
+CONF.FALL_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.fall_speed;
+CONF.JUMP_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.jump_speed;
 
 // File access is there. ====
 
