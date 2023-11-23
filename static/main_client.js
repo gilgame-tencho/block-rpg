@@ -193,6 +193,9 @@ const main_frame = () => {
     Object.values(ccdm.balls).forEach((ball) => {
         ball.frame();
     });
+    Object.values(ccdm.blocks).forEach((blk) => {
+        blk.frame();
+    });
 }
 
 let start_flg = false;

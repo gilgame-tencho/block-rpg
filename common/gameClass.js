@@ -603,6 +603,9 @@ class Ball extends GameObject{
         let blk = Object.assign({}, ccdm.blocks, ccdm.players);
         return Object.keys(blk).some((id)=>{
             if(this.intersect(blk[id])){
+                if(blk[id].attr === "Block"){
+                    ccdm.blocks[id].touched = true;
+                }
                 // if(blk[id].constructor.name === 'PlayerStick'){
                 //     // this.direction_UD = !this.direction_UD;
                 // }
@@ -964,6 +967,15 @@ class commonBlock extends PhysicsObject{
         this.bounding = false;
         this.effect = false;
         this.event = false;
+    }
+    frame(){
+        if(this.touched){
+            this.remove();
+        }
+    }
+    remove(){
+        console.log(`delete Block: ${this.type}\t${this.id}`);
+        delete ccdm.blocks[this.id];
     }
     toJSON(){
         return Object.assign(super.toJSON(),{
