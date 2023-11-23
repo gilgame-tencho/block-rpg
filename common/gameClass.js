@@ -912,13 +912,19 @@ class Stage extends GeneralObject{
         let blk_exist = false;
         let blk_viewing = false;
         let blk_height = 3;
+        let blocks = [
+            'r',
+            'b',
+            'g',
+            'y',
+        ];
         let hool = Math.round(CONF.CHAR_W / CONF.BLK) + 2;
         for(let x=0; x<CONF.MAX_WIDTH; x++){
             st.push([]);
             for(let y=0; y<CONF.MAX_HEIGHT; y++){
                 if(y == 7 || y == 12){
                     if(x % hool == 0){
-                        st[x].push('n');
+                        st[x].push('r');
                     }else{
                         st[x].push('.');
                     }
@@ -970,14 +976,34 @@ class commonBlock extends PhysicsObject{
         });
     }
 }
-class normalBlock extends commonBlock{
+class redBlock extends commonBlock{
     constructor(obj={}){
         super(obj);
-        this.type = "normal";
+        this.type = "red";
         this.height = CONF.BLK * 1;
     }
 }
-
+class blueBlock extends commonBlock{
+    constructor(obj={}){
+        super(obj);
+        this.type = "blue";
+        this.height = CONF.BLK * 1;
+    }
+}
+class greenBlock extends commonBlock{
+    constructor(obj={}){
+        super(obj);
+        this.type = "green";
+        this.height = CONF.BLK * 1;
+    }
+}
+class yellowBlock extends commonBlock{
+    constructor(obj={}){
+        super(obj);
+        this.type = "yellow";
+        this.height = CONF.BLK * 1;
+    }
+}
 const ccdm = new CCDM();
 
 // ### ---
@@ -998,8 +1024,20 @@ class GameMaster{
                     x: x * CONF.BLK,
                     y: y * CONF.BLK,
                 };
-                if(point === 'n'){
-                    let block = new normalBlock(param);
+                if(point === 'r'){
+                    let block = new redBlock(param);
+                    ccdm.blocks[block.id] = block;
+                }
+                if(point === 'b'){
+                    let block = new blueBlock(param);
+                    ccdm.blocks[block.id] = block;
+                }
+                if(point === 'y'){
+                    let block = new yellowBlock(param);
+                    ccdm.blocks[block.id] = block;
+                }
+                if(point === 'g'){
+                    let block = new greenBlock(param);
                     ccdm.blocks[block.id] = block;
                 }
                 y++;
