@@ -19,6 +19,10 @@ images.map = {
 }
 images.piece = {
     normal: $('#img-block-hard')[0],
+    red: $('#img-block-red')[0],
+    blue: $('#img-block-blue')[0],
+    green: $('#img-block-green')[0],
+    yellow: $('#img-block-yellow')[0],
 }
 images.ball ={
     normal: $('#img-chara-ball')[0],

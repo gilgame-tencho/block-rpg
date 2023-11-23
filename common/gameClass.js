@@ -924,7 +924,7 @@ class Stage extends GeneralObject{
             for(let y=0; y<CONF.MAX_HEIGHT; y++){
                 if(y == 7 || y == 12){
                     if(x % hool == 0){
-                        st[x].push('r');
+                        st[x].push(blocks[random(blocks.length)]);
                     }else{
                         st[x].push('.');
                     }
