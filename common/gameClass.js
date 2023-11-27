@@ -533,6 +533,7 @@ class Ball extends GameObject{
         this.type = 'normal';
         this.speed = CONF.BALL_SPEED;
         this.dead_flg = false;
+        this.caller = obj.caller;
         if(obj.id){ this.id = obj.id }
 
         this.width = CONF.CHAR_W;
@@ -697,6 +698,7 @@ class Ball extends GameObject{
     }
     remove(){
         console.log(`delete Ball: ${this.type}\t${this.id}`);
+        delete ccdm.players[this.caller].balls[this.id];
         delete ccdm.balls[this.id];
     }
     toJSON(){
@@ -707,6 +709,7 @@ class Ball extends GameObject{
             view_x: this.view_x,
             menu: this.menu,
             dead_flg: this.dead_flg,
+            caller: this.caller,
         });
     }
 }
@@ -806,12 +809,18 @@ class PlayerStick extends GameObject{
             this.direction = 'r';
             this.move(CONF.MV_SPEED);
         }
+        // auto shoot
+        let balls = Object.values(this.balls);
+        if(balls.length < 1){
+            this.shoot();
+        }
         this.isDead();
     }
     shoot(){
         let param = {
             x: this.x + this.width / 2,
             y: this.y - CONF.CHAR_Y,
+            caller: this.id,
         }
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
