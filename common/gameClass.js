@@ -690,14 +690,14 @@ class Ball extends GameObject{
         return super.intersectField();
     }
     isDead(){
-        let dead_flg = false;
         if(this.y > CONF.DEAD_LINE){
-            dead_flg = true;
+            this.dead_flg = true;
+            this.remove();
         }
     }
     remove(){
-        delete cdm.balls[this.id];
-        io.to(this.socketId).emit('dead');
+        console.log(`delete Ball: ${this.type}\t${this.id}`);
+        delete ccdm.balls[this.id];
     }
     toJSON(){
         return Object.assign(super.toJSON(), {
@@ -744,6 +744,7 @@ class PlayerStick extends GameObject{
         this.direction = 'r';  // direction is right:r, left:l;
 
         this.balls = {};
+        this.status = 'standby';
         // this.shoot();
 
         this.cmd_unit = {
@@ -815,6 +816,9 @@ class PlayerStick extends GameObject{
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
         ccdm.balls[ball.id] = ball;
+        if(this.status === 'standby'){
+            this.status = 'play';
+        }
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
@@ -864,6 +868,9 @@ class PlayerStick extends GameObject{
         return !collision;
     }
     isDead(){
+        if(this.status != 'play'){
+            return;
+        }
         let dead_flg = false;
         if(this.y > CONF.DEAD_LINE){
             dead_flg = true;
@@ -871,7 +878,7 @@ class PlayerStick extends GameObject{
 
         if(dead_flg){
             this.dead_flg = true;
-            this.respone();
+            // this.respone();
         }
     }
     score_cal(){
