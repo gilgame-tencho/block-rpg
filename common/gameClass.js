@@ -533,6 +533,7 @@ class Ball extends GameObject{
         this.type = 'normal';
         this.speed = CONF.BALL_SPEED;
         this.dead_flg = false;
+        this.caller = obj.caller;
         if(obj.id){ this.id = obj.id }
 
         this.width = CONF.CHAR_W;
@@ -690,14 +691,15 @@ class Ball extends GameObject{
         return super.intersectField();
     }
     isDead(){
-        let dead_flg = false;
         if(this.y > CONF.DEAD_LINE){
-            dead_flg = true;
+            this.dead_flg = true;
+            this.remove();
         }
     }
     remove(){
-        delete cdm.balls[this.id];
-        io.to(this.socketId).emit('dead');
+        console.log(`delete Ball: ${this.type}\t${this.id}`);
+        delete ccdm.players[this.caller].balls[this.id];
+        delete ccdm.balls[this.id];
     }
     toJSON(){
         return Object.assign(super.toJSON(), {
@@ -707,6 +709,7 @@ class Ball extends GameObject{
             view_x: this.view_x,
             menu: this.menu,
             dead_flg: this.dead_flg,
+            caller: this.caller,
         });
     }
 }
@@ -744,6 +747,8 @@ class PlayerStick extends GameObject{
         this.direction = 'r';  // direction is right:r, left:l;
 
         this.balls = {};
+        this.life = CONF.LIFE;
+        this.status = 'standby';
         // this.shoot();
 
         this.cmd_unit = {
@@ -805,16 +810,25 @@ class PlayerStick extends GameObject{
             this.direction = 'r';
             this.move(CONF.MV_SPEED);
         }
+        // auto shoot
+        let balls = Object.values(this.balls);
+        if(balls.length < 1){
+            this.shoot();
+        }
         this.isDead();
     }
     shoot(){
         let param = {
             x: this.x + this.width / 2,
             y: this.y - CONF.CHAR_Y,
+            caller: this.id,
         }
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
         ccdm.balls[ball.id] = ball;
+        if(this.status === 'standby'){
+            this.status = 'play';
+        }
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
@@ -864,6 +878,9 @@ class PlayerStick extends GameObject{
         return !collision;
     }
     isDead(){
+        if(this.status != 'play'){
+            return;
+        }
         let dead_flg = false;
         if(this.y > CONF.DEAD_LINE){
             dead_flg = true;
@@ -871,7 +888,7 @@ class PlayerStick extends GameObject{
 
         if(dead_flg){
             this.dead_flg = true;
-            this.respone();
+            // this.respone();
         }
     }
     score_cal(){
