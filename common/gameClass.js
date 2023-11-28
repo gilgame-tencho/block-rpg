@@ -725,6 +725,8 @@ class PlayerStick extends GameObject{
         this.speed = 1;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
+        this.balls = {};
+        this.life = CONF.LIFE;
 
         this.menu = {
             name:       { x: CONF.BLK*1, y: CONF.BLK*1, v:this.nickname },
@@ -735,6 +737,8 @@ class PlayerStick extends GameObject{
             stage_no:   { x: CONF.BLK*9, y: CONF.BLK*2, v:"1-1" },
             time_title: { x: CONF.BLK*13, y: CONF.BLK*1, v:"TIME" },
             time:       { x: CONF.BLK*13, y: CONF.BLK*2, v:300 },
+            life_name:  { x: CONF.BLK*17, y: CONF.BLK*1, v:"LIFE" },
+            life:       { x: CONF.BLK*17, y: CONF.BLK*2, v:this.life},
         }
         this.score_interval = CONF.FPS;
         this.score_i = 0;
@@ -746,8 +750,6 @@ class PlayerStick extends GameObject{
         this.angle = 0;
         this.direction = 'r';  // direction is right:r, left:l;
 
-        this.balls = {};
-        this.life = CONF.LIFE;
         this.status = 'standby';
         // this.shoot();
 
@@ -818,17 +820,23 @@ class PlayerStick extends GameObject{
         this.isDead();
     }
     shoot(){
+        if(this.life < 1){ return }
         let param = {
             x: this.x + this.width / 2,
             y: this.y - CONF.CHAR_Y,
             caller: this.id,
         }
+        this.life_down();
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
         ccdm.balls[ball.id] = ball;
         if(this.status === 'standby'){
             this.status = 'play';
         }
+    }
+    life_down(score=1){
+        this.life = this.life - score;
+        this.menu.life.v = this.life;
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
