@@ -747,6 +747,7 @@ class PlayerStick extends GameObject{
         this.direction = 'r';  // direction is right:r, left:l;
 
         this.balls = {};
+        this.life = CONF.LIFE;
         this.status = 'standby';
         // this.shoot();
 

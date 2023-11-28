@@ -41,3 +41,7 @@ jump_power: 5
 ################
 ### Game System param
 CMD_HIS: 5
+
+################
+### Player parametor
+LIFE: 3
