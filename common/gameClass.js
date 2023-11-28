@@ -820,13 +820,12 @@ class PlayerStick extends GameObject{
         this.isDead();
     }
     shoot(){
-        if(this.life < 1){ return }
+        if(!this.life_down()){ return }
         let param = {
             x: this.x + this.width / 2,
             y: this.y - CONF.CHAR_Y,
             caller: this.id,
         }
-        this.life_down();
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
         ccdm.balls[ball.id] = ball;
@@ -835,8 +834,13 @@ class PlayerStick extends GameObject{
         }
     }
     life_down(score=1){
+        if(this.life <= 0){
+            this.dead_flg = true;
+            return false;
+        }
         this.life = this.life - score;
         this.menu.life.v = this.life;
+        return true;
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
