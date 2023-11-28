@@ -915,7 +915,6 @@ class PlayerStick extends GameObject{
         io.to(this.socketId).emit('dead');
     }
     respone(){
-        // delete ccdm.players[this.id];
         // this.x = CONF.BLK * 2;
         // this.y = CONF.FIELD_HEIGHT * 0.2;
         // this.view_x = 0;
