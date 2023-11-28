@@ -914,6 +914,16 @@ class PlayerStick extends GameObject{
         delete ccdm.players[this.id];
         io.to(this.socketId).emit('dead');
     }
+    respone(){
+        // delete ccdm.players[this.id];
+        // this.x = CONF.BLK * 2;
+        // this.y = CONF.FIELD_HEIGHT * 0.2;
+        // this.view_x = 0;
+        this.dead_flg = false;
+        this.menu.score.v = 0;
+        this.life = CONF.LIFE;
+        this.menu.life.v = this.life;
+    }
     toJSON(){
         return Object.assign(super.toJSON(), {
             socketId: this.socketId,
