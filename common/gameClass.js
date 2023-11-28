@@ -820,17 +820,23 @@ class PlayerStick extends GameObject{
         this.isDead();
     }
     shoot(){
+        if(this.life < 1){ return }
         let param = {
             x: this.x + this.width / 2,
             y: this.y - CONF.CHAR_Y,
             caller: this.id,
         }
+        this.life_down();
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
         ccdm.balls[ball.id] = ball;
         if(this.status === 'standby'){
             this.status = 'play';
         }
+    }
+    life_down(score=1){
+        this.life = this.life - score;
+        this.menu.life.v = this.life;
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
