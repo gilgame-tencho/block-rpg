@@ -820,13 +820,12 @@ class PlayerStick extends GameObject{
         this.isDead();
     }
     shoot(){
-        if(this.life < 1){ return }
+        if(!this.life_down()){ return }
         let param = {
             x: this.x + this.width / 2,
             y: this.y - CONF.CHAR_Y,
             caller: this.id,
         }
-        this.life_down();
         let ball = new Ball(param);
         this.balls[ball.id] = ball;
         ccdm.balls[ball.id] = ball;
@@ -835,8 +834,13 @@ class PlayerStick extends GameObject{
         }
     }
     life_down(score=1){
+        if(this.life <= 0){
+            this.dead_flg = true;
+            return false;
+        }
         this.life = this.life - score;
         this.menu.life.v = this.life;
+        return true;
     }
     collistion(oldX, oldY, oldViewX=this.view_x){
         let collision = false;
@@ -909,6 +913,15 @@ class PlayerStick extends GameObject{
     remove(){
         delete ccdm.players[this.id];
         io.to(this.socketId).emit('dead');
+    }
+    respone(){
+        // this.x = CONF.BLK * 2;
+        // this.y = CONF.FIELD_HEIGHT * 0.2;
+        // this.view_x = 0;
+        this.dead_flg = false;
+        this.menu.score.v = 0;
+        this.life = CONF.LIFE;
+        this.menu.life.v = this.life;
     }
     toJSON(){
         return Object.assign(super.toJSON(), {
