@@ -115,6 +115,8 @@ const menu_frame = () => {
     cotxFT.fillText(mymenu.stage_no.v, mymenu.stage_no.x, mymenu.stage_no.y);
     cotxFT.fillText(mymenu.time_title.v, mymenu.time_title.x, mymenu.time_title.y);
     cotxFT.fillText(mymenu.time.v, mymenu.time.x, mymenu.time.y);
+    cotxFT.fillText(mymenu.life_name.v, mymenu.life_name.x, mymenu.life_name.y);
+    cotxFT.fillText(mymenu.life.v, mymenu.life.x, mymenu.life.y);
     cotxFT.restore();
 }
 
