@@ -6,10 +6,10 @@ const CONF = Object.assign(
     yaml.parse(fs.readFileSync(__dirname + '/../conf/apl_conf.yml', 'utf-8')),
 );
 
-CONF.DEAD_LINE = CONF.FIELD_HEIGHT + CONF.BLK * 1;
-CONF.DEAD_END = CONF.FIELD_HEIGHT + CONF.BLK * 3;
-CONF.MAX_HEIGHT = CONF.FIELD_HEIGHT / CONF.BLK - 1;
-CONF.MAX_WIDTH = CONF.FIELD_WIDTH / CONF.BLK;
+CONF.DEAD_LINE = CONF.MONITOR_HEIGHT + CONF.BLK * 1;
+CONF.DEAD_END = CONF.MONITOR_HEIGHT + CONF.BLK * 3;
+CONF.MAX_HEIGHT = CONF.MONITOR_HEIGHT / CONF.BLK - 1;
+CONF.MAX_WIDTH = CONF.MONITOR_WIDTH / CONF.BLK;
 CONF.FPMS = Math.round(CONF.RTms_Psec / CONF.FPS * 100) / 100;
 CONF.MV_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.move_speed;
 CONF.FALL_SPEED = CONF.FPMS / (CONF.RTms_Psec + CONF.Debug_Slow) * CONF.fall_speed;
@@ -163,7 +163,7 @@ class GameObject extends PhysicsObject{
         super(obj);
         this.angle = obj.angle;
         this.direction = obj.direction;
-        this.END_POINT = obj.END_POINT ? obj.END_POINT : CONF.FIELD_WIDTH;
+        this.END_POINT = obj.END_POINT ? obj.END_POINT : CONF.MONITOR_WIDTH;
     }
     collistion(oldX, oldY){
         let collision = false;

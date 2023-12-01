@@ -84,8 +84,8 @@ function debug_show_object_line(cotx, obj){
     cotx.restore();
 }
 
-function is_draw(obj, margin, field_width){
-    return (-margin < obj.x && obj.x < field_width + margin)
+function is_draw(obj, margin, monitor_width){
+    return (-margin < obj.x && obj.x < monitor_width + margin)
 }
 
 // init -----
@@ -141,7 +141,7 @@ const draw_view = function(){
             width: piece.width,
             height: piece.height,
         }
-        if(is_draw(param, MARGIN, CONF.FIELD_WIDTH)){
+        if(is_draw(param, MARGIN, CONF.MONITOR_WIDTH)){
             drawImage(cotxMD, images.piece[piece.type], param);
         }
     });
@@ -153,7 +153,7 @@ const draw_view = function(){
             width: player.width,
             height: player.height,
         }
-        if(is_draw(param, MARGIN, CONF.FIELD_WIDTH)){
+        if(is_draw(param, MARGIN, CONF.MONITOR_WIDTH)){
             drawImage(cotxMD, img, param);
             // debug_show_object_line(cotxMD, player);
 
@@ -173,13 +173,13 @@ const draw_view = function(){
             width: ball.width,
             height: ball.height,
         }
-        if(is_draw(param, MARGIN, CONF.FIELD_WIDTH)){
+        if(is_draw(param, MARGIN, CONF.MONITOR_WIDTH)){
             drawImage(cotxMD, img, param);
         }
     });
 }
 
-let front_view_x = CONF.FIELD_WIDTH;
+let front_view_x = CONF.MONITOR_WIDTH;
 
 const main_frame = () => {
     // ### chain block ####
@@ -187,8 +187,8 @@ const main_frame = () => {
         // frame
         player.frame();
 
-        if(front_view_x < player.camera.x + CONF.FIELD_WIDTH){
-            front_view_x = player.camera.x + CONF.FIELD_WIDTH;
+        if(front_view_x < player.camera.x + CONF.MONITOR_WIDTH){
+            front_view_x = player.camera.x + CONF.MONITOR_WIDTH;
         }
     });
     Object.values(ccdm.balls).forEach((ball) => {
