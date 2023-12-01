@@ -715,6 +715,14 @@ class Ball extends GameObject{
     }
 }
 
+class Camera extends GeneralObject{
+    constructor(obj={}){
+        super(obj);
+        this.x = obj.x;
+        this.y = obj.y;
+    }
+}
+
 class PlayerStick extends GameObject{
     constructor(obj={}){
         super(obj);
