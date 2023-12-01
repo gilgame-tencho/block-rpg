@@ -430,7 +430,6 @@ class PlayerStick extends GameObject{
         this.socketId = obj.socketId;
         this.nickname = obj.nickname;
         this.type = 'normal';
-        // this.player_type = 'player';
         this.view_x = 0;
         this.my_camera = new Camera(obj);
         this.speed = 1;
@@ -462,7 +461,6 @@ class PlayerStick extends GameObject{
         this.direction = 'r';  // direction is right:r, left:l;
 
         this.status = 'standby';
-        // this.shoot();
 
         this.cmd_unit = {
             // jump: {
@@ -474,7 +472,6 @@ class PlayerStick extends GameObject{
             // }
         };
 
-        // this.flg_fly = true;
         this.cmd_his = []; //command history. FIFO.
         for(let i=0; i<CONF.CMD_HIS; i++){
             this.cmd_his.push({});
@@ -616,20 +613,12 @@ class PlayerStick extends GameObject{
     }
     score_cal(){
         this.menu.score.v += 1;
-        // if(this.score_i > this.score_interval){
-        //     this.menu.score.v += Math.round(CONF.MV_SPEED * this.score_interval,0);
-        //     this.score_i = 0;
-        // }
-        // this.score_i ++;
     }
     remove(){
         delete ccdm.players[this.id];
         io.to(this.socketId).emit('dead');
     }
     respone(){
-        // this.x = CONF.BLK * 2;
-        // this.y = CONF.FIELD_HEIGHT * 0.2;
-        // this.view_x = 0;
         this.dead_flg = false;
         this.menu.score.v = 0;
         this.life = CONF.LIFE;
