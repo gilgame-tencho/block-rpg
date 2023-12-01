@@ -718,8 +718,8 @@ class Ball extends GameObject{
 class Camera extends GeneralObject{
     constructor(obj={}){
         super(obj);
-        this.x = obj.x;
-        this.y = obj.y;
+        this.x = 0;
+        this.y = 0;
     }
 }
 
@@ -731,6 +731,7 @@ class PlayerStick extends GameObject{
         this.type = 'normal';
         // this.player_type = 'player';
         this.view_x = 0;
+        this.my_camera = new Camera(obj);
         this.speed = 1;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
