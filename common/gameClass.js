@@ -430,8 +430,7 @@ class PlayerStick extends GameObject{
         this.socketId = obj.socketId;
         this.nickname = obj.nickname;
         this.type = 'normal';
-        this.view_x = 0;
-        this.my_camera = new Camera(obj);
+        this.camera = new Camera(obj);
         this.speed = 1;
         this.dead_flg = false;
         if(obj.id){ this.id = obj.id }
@@ -550,7 +549,7 @@ class PlayerStick extends GameObject{
         this.menu.life.v = this.life;
         return true;
     }
-    collistion(oldX, oldY, oldViewX=this.view_x){
+    collistion(oldX, oldY, oldViewX=this.camera.x){
         let collision = false;
         if(this.intersectField()){
                 collision = true;
@@ -562,7 +561,7 @@ class PlayerStick extends GameObject{
         }
         if(collision){
             this.x = oldX; this.y = oldY;
-            this.view_x = oldViewX;
+            this.camera.x = oldViewX;
         }else{
             this.debug_info.collistion = '';
         }
@@ -570,16 +569,16 @@ class PlayerStick extends GameObject{
     }
     move(distance){
         const oldX = this.x, oldY = this.y;
-        const oldViewX = this.view_x;
+        const oldViewX = this.camera.x;
 
         let range = distance * this.speed;
         let dis_x = range * Math.cos(this.angle);
         let dis_y = range * Math.sin(this.angle);
-        if(this.x + dis_x <= this.view_x + CONF.CENTER){
+        if(this.x + dis_x <= this.camera.x + CONF.CENTER){
             this.x += dis_x;
             this.y += dis_y;
         }else{
-            this.view_x += dis_x;
+            this.camera.x += dis_x;
             this.x += dis_x;
             this.y += dis_y;
         }
@@ -629,7 +628,7 @@ class PlayerStick extends GameObject{
             socketId: this.socketId,
             nickname: this.nickname,
             type: this.type,
-            view_x: this.view_x,
+            camera: this.camera,
             menu: this.menu,
             dead_flg: this.dead_flg,
         });

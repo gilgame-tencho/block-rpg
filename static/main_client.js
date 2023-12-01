@@ -126,7 +126,7 @@ const draw_view = function(){
     const MARGIN = CONF.BLK * 3;
     let VIEW_X = 0;
     if(my_player){
-        VIEW_X = my_player.view_x;
+        VIEW_X = my_player.camera.x;
     }
 
     let pieces = {};
@@ -188,8 +188,8 @@ const main_frame = () => {
         // frame
         player.frame();
 
-        if(front_view_x < player.view_x + CONF.FIELD_WIDTH){
-            front_view_x = player.view_x + CONF.FIELD_WIDTH;
+        if(front_view_x < player.camera.x + CONF.FIELD_WIDTH){
+            front_view_x = player.camera.x + CONF.FIELD_WIDTH;
         }
     });
     Object.values(ccdm.balls).forEach((ball) => {
