@@ -606,6 +606,7 @@ class Ball extends GameObject{
             if(this.intersect(blk[id])){
                 if(blk[id].attr === "Block"){
                     ccdm.blocks[id].touched = true;
+                    ccdm.players[this.caller].score_cal();
                 }
                 // if(blk[id].constructor.name === 'PlayerStick'){
                 //     // this.direction_UD = !this.direction_UD;
@@ -777,7 +778,7 @@ class PlayerStick extends GameObject{
         this.movement = param;
     }
     frame(){
-        this.score_cal();
+        // this.score_cal();
         let command = this.movement;
         // movement
         if(command.forward){
@@ -904,11 +905,12 @@ class PlayerStick extends GameObject{
         }
     }
     score_cal(){
-        if(this.score_i > this.score_interval){
-            this.menu.score.v += Math.round(CONF.MV_SPEED * this.score_interval,0);
-            this.score_i = 0;
-        }
-        this.score_i ++;
+        this.menu.score.v += 1;
+        // if(this.score_i > this.score_interval){
+        //     this.menu.score.v += Math.round(CONF.MV_SPEED * this.score_interval,0);
+        //     this.score_i = 0;
+        // }
+        // this.score_i ++;
     }
     remove(){
         delete ccdm.players[this.id];
