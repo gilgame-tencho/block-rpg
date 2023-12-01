@@ -124,9 +124,9 @@ const menu_frame = () => {
 const draw_view = function(){
     view_reset_middle();
     const MARGIN = CONF.BLK * 3;
-    let VIEW_X = 0;
+    let camera = { x: 0, y: 0};
     if(my_player){
-        VIEW_X = my_player.camera.x;
+        camera = my_player.camera.x;
     }
 
     let pieces = {};
@@ -136,7 +136,6 @@ const draw_view = function(){
 
     Object.values(pieces).forEach((piece) => {
         let param = {
-            // x: piece.x - VIEW_X,
             x: piece.x,
             y: piece.y,
             width: piece.width,

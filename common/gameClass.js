@@ -422,6 +422,10 @@ class Camera extends GeneralObject{
         this.x = 0;
         this.y = 0;
     }
+    set(obj){
+        this.x = obj.x;
+        this.y = obj.y;
+    }
 }
 
 class PlayerStick extends GameObject{
@@ -549,7 +553,7 @@ class PlayerStick extends GameObject{
         this.menu.life.v = this.life;
         return true;
     }
-    collistion(oldX, oldY, oldViewX=this.camera.x){
+    collistion(oldX, oldY, oldCamera){
         let collision = false;
         if(this.intersectField()){
                 collision = true;
@@ -561,7 +565,7 @@ class PlayerStick extends GameObject{
         }
         if(collision){
             this.x = oldX; this.y = oldY;
-            this.camera.x = oldViewX;
+            this.camera.set(oldCamera);
         }else{
             this.debug_info.collistion = '';
         }
@@ -569,7 +573,10 @@ class PlayerStick extends GameObject{
     }
     move(distance){
         const oldX = this.x, oldY = this.y;
-        const oldViewX = this.camera.x;
+        const oldCamera = {
+            x: this.camera.x,
+            t: this.camera.y,
+        };
 
         let range = distance * this.speed;
         let dis_x = range * Math.cos(this.angle);
@@ -583,7 +590,7 @@ class PlayerStick extends GameObject{
             this.y += dis_y;
         }
 
-        let collision = this.collistion(oldX, oldY, oldViewX);
+        let collision = this.collistion(oldX, oldY, oldCamera);
 
         if(!collision){
             Object.keys(ccdm.items).forEach((id)=>{
