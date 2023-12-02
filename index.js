@@ -37,7 +37,7 @@ io.on('connection', function(socket) {
             id: config.id,
             END_POINT: ccdm.stage.END_POINT,    //??
             x: CONF.BLK * 5,
-            y: CONF.FIELD_HEIGHT * 0.8,
+            y: CONF.MONITOR_HEIGHT * 0.8,
         });
         ccdm.players[player.id] = player;
         io.sockets.emit('new-player', player);
@@ -64,8 +64,8 @@ io.on('connection', function(socket) {
 app.use('/static', express.static(__dirname + '/static'));
 
 const app_param = {
-    FIELD_HEIGHT: CONF.FIELD_HEIGHT,
-    FIELD_WIDTH: CONF.FIELD_WIDTH,
+    MONITOR_HEIGHT: CONF.MONITOR_HEIGHT,
+    MONITOR_WIDTH: CONF.MONITOR_WIDTH,
 }
 app.get('/', (request, response) => {
     app_param.name = request.param('name');
