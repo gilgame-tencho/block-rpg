@@ -244,6 +244,10 @@ class SystemObject extends PhysicsObject{
 }
 class SystemFrame extends SystemObject{
 }
+class FiledArea extends SystemFrame{
+}
+class DeadLine extends SystemFrame{
+}
 
 class Ball extends GameObject{
     constructor(obj={}){
@@ -429,7 +433,7 @@ class Ball extends GameObject{
     }
 }
 
-class Camera extends GeneralObject{
+class Camera extends SystemFrame{
     constructor(obj={}){
         super(obj);
         this.x = 0;
