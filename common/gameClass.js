@@ -231,6 +231,19 @@ class GameObject extends PhysicsObject{
         });
     }
 }
+class SystemObject extends PhysicsObject{
+    constructor(obj={}){
+        super(obj);
+        this.system = true;
+    }
+    toJSON(){
+        return Object.assign(super.toJSON(), {
+            system: this.system,
+        });
+    }
+}
+class SystemFrame extends SystemObject{
+}
 
 class Ball extends GameObject{
     constructor(obj={}){
