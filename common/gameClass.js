@@ -231,7 +231,8 @@ class GameObject extends PhysicsObject{
         });
     }
 }
-class SystemObject extends PhysicsObject{
+
+class SystemObject extends OriginObject{
     constructor(obj={}){
         super(obj);
         this.system = true;
@@ -243,10 +244,58 @@ class SystemObject extends PhysicsObject{
     }
 }
 class SystemFrame extends SystemObject{
+    constructor(obj={}){
+        super(obj);
+        this.x = obj.x;
+        this.y = obj.y;
+        this.width = obj.width;
+        this.height = obj.height;
+    }
+    toJSON(){
+        return Object.assign(super.toJSON(), {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height,
+        });
+    }
 }
 class FiledArea extends SystemFrame{
 }
 class DeadLine extends SystemFrame{
+    constructor(obj={}){
+        super(obj);
+        this.x = 0;
+        this.y = 0;
+    }
+    set(obj){
+        this.x = obj.x;
+        this.y = obj.y;
+    }
+}
+class DefaultConfig extends SystemObject{
+    constructor(obj={}){
+        super(obj);
+        this.filed = {
+            x: 0,
+            y: 0,
+            width: CONF.FILED_WIDTH,
+            height: CONF.FILED_HEIGHT,
+        };
+        this.camera = {
+            x: 0,
+            y: 0,
+            width: CONF.MONITOR_WIDTH,
+            height: CONF.MONITOR_HEIGHT,
+        }
+        let margin = 30;
+        this.dead_line = {
+            x: this.camera.x - margin,
+            y: this.camera.y - margin,
+            width: this.camera.x + this.camera.width + margin,
+            height: this.camera.y + this.camera.height + margin,
+        }
+    }
 }
 
 class Ball extends GameObject{
