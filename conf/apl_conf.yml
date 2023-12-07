@@ -18,7 +18,7 @@ FIELD_HEIGHT: 2400
 ###     RTms_Psec: 1000
 ###     Debug_Slow: 5000
 ###     FPS: 30
-###   defoult
+###   default
 ###     RTms_Psec: 1000
 ###     Debug_Slow: 0
 ###     FPS: 60
